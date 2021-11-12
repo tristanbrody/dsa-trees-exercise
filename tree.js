@@ -14,34 +14,39 @@ class Tree {
 
   /** sumValues(): add up all of the values in the tree. */
 
-  sumValues(total = 0, condition = "true===true") {
-    const toVisit = [this];
-    while (toVisit.length) {
-      let current = toVisit.shift();
-      if (current.root) {
-        for (let node of current.root.children) {
-          if (eval(condition)) {
-            node.val;
-            total += node.val;
-            toVisit.push(node);
-          }
-        }
-      }
-    }
-    return this.root === null ? 0 : total + this.root.val;
-  }
+  // sumValues(total = 0, condition = "true===true") {
+  //   const toVisit = [this];
+  //   while (toVisit.length) {
+  //     let current = toVisit.shift();
+  //     if (current.root) {
+  //       for (let node of current.root.children) {
+  //         if (eval(condition)) {
+  //           total += node.val;
+  //           toVisit.push(node);
+  //         }
+  //       }
+  //     }
+  //     if (current.children) {
+  //       for (let node of current.children) {
+  //         if (eval(condition)) {
+  //           total += node.val;
+  //           toVisit.push(node);
+  //         }
+  //       }
+  //     }
+  //   }
+  //   return this.root === null ? 0 : total + this.root.val;
+  // }
 
-  sumValuesRecursively(total = 0, toVisit = [this]) {
-    if (toVisit.length) {
-      let current = toVisit.shift();
-      if (current.root) {
-        for (let node of current.root.children) {
-          total += node.val;
-          this.sumValuesRecursively(total, toVisit);
-        }
+  sumValues(total = 0, node) {
+    if (!this.root) return 0;
+    if (this.node.children) {
+      for (let child of this.node.children) {
+        total += child.val;
       }
-      return total;
+      this.sumValues(total, child);
     }
+    return total;
   }
 
   /** countEvens(): count all of the nodes in the tree with even values. */
@@ -53,9 +58,21 @@ class Tree {
   /** numGreater(lowerBound): return a count of the number of nodes
    * whose value is greater than lowerBound. */
 
-  numGreater(lowerBound) {
-    const condition = `node.val>${lowerBound}`;
-    return this.sumValues(0, condition);
+  numGreater(lowerBound, total = 0) {
+    const toVisit = [this];
+    while (toVisit.length) {
+      let current = toVisit.shift();
+      if (current.root || current.children) {
+        let iterable = current.children || current.root.children;
+        for (let node of iterable) {
+          toVisit.push(node);
+          if (node.val > lowerBound) {
+            total++;
+          }
+        }
+      }
+    }
+    return total;
   }
 }
 emptyTree = new Tree();
